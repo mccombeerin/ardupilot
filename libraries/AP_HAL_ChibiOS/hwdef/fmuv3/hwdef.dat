@@ -42,7 +42,7 @@
 # extract the required DMA and alternate function tables.
 
 # MCU class and specific type
-MCU STM32F4xx STM32F427xx
+MCU STM32H7xx STM32H743xx
 
 # Now we need to specify the APJ_BOARD_ID. This is the ID that the
 # bootloader presents to GCS software so it knows if this firmware is
@@ -61,7 +61,7 @@ APJ_BOARD_ID TARGET_HW_CUBE_F4
 # 24000000 or 8000000.
 
 # crystal frequency
-OSCILLATOR_HZ 24000000
+OSCILLATOR_HZ 16000000
 
 # On some boards you will need to also set the various PLL values. See
 # the defaults in common/mcuconf.h, and use the define mechanism
@@ -176,6 +176,13 @@ IOMCU_UART USART6
 PA0 UART4_TX UART4
 PA1 UART4_RX UART4
 
+# UART5
+PC10 UART4_TX UART4
+PC11 UART4_RX UART4
+PC12 UART5_TX UART5
+PB12 UART5_RX UART5
+
+
 # Now define the primary battery connectors. The labels we choose here
 # are used to create defines for pins in the various drivers, so
 # choose names that match existing board setups where possible. Here
@@ -188,7 +195,7 @@ PA2 BATT_VOLTAGE_SENS ADC1 SCALE(1)
 PA3 BATT_CURRENT_SENS ADC1 SCALE(1)
 
 # Now the VDD sense pin. This is used to sense primary board voltage.
-PA4 VDD_5V_SENS ADC1 SCALE(2)
+PC0 VDD_5V_SENS ADC1 SCALE(2)
 
 # Now the first SPI bus. At minimum you need SCK, MISO and MOSI pin
 definitions. You can add speed modifiers if you want them, otherwise
@@ -249,10 +256,14 @@ PB9 I2C1_SDA I2C1
 PB10 I2C2_SCL I2C2
 PB11 I2C2_SDA I2C2
 
+PD12 I2C4_SCL I2C4
+PD13 I2C4_SDA I2C4
+
 # the 2nd SPI bus
 PB13 SPI2_SCK SPI2
-PB14 SPI2_MISO SPI2
-PB15 SPI2_MOSI SPI2
+PC2_C SPI2_MISO SPI2
+PC3_C SPI2_MOSI SPI2
+PE15 SPI2_CS SPI2
 
 # This input pin is used to detect that power is valid on USB.
 PC0 VBUS_nVALID INPUT PULLUP
@@ -312,21 +323,28 @@ PD9 USART3_RX USART3
 PD11 USART3_CTS USART3
 PD12 USART3_RTS USART3
 
+PD11 USART3_CTS USART3
+PD12 USART3_RTS USART3
+
 # The CS pin for FRAM (ramtron). This one is marked as using
 # SPEED_VERYLOW, which matches the HAL_PX4 setup.
-PD10 FRAM_CS CS SPEED_VERYLOW
+PA4 FRAM_CS CS SPEED_VERYLOW
 
 # Now we start defining some PWM pins. We also map these pins to GPIO
 # values, so users can set BRD_PWM_COUNT to choose how many of the PWM
 # outputs on the primary MCU are setup as PWM and how many as
 # GPIOs. To match HAL_PX4 we number the GPIOs for the PWM outputs
 # starting at 50.
-PE14 TIM1_CH4 TIM1 PWM(1) GPIO(50)
-PE13 TIM1_CH3 TIM1 PWM(2) GPIO(51)
-PE11 TIM1_CH2 TIM1 PWM(3) GPIO(52)
-PE9  TIM1_CH1 TIM1 PWM(4) GPIO(53)
-PD13 TIM4_CH2 TIM4 PWM(5) GPIO(54)
-PD14 TIM4_CH3 TIM4 PWM(6) GPIO(55)
+
+PA9  TIM1_CH2 TIM1 PWM(3) GPIO(52)
+PA8  TIM1_CH1 TIM1 PWM(4) GPIO(53)
+PC9 TIM3_CH4 TIM3 PWM(1) GPIO(50)
+PC8 TIM3_CH3 TIM3 PWM(2) GPIO(51)
+PC7 TIM3_CH2 TIM3 PWM(5) GPIO(54)
+PC6 TIM3_CH1 TIM3 PWM(6) GPIO(55)
+PD15 TIM4_CH4 TIM4 PWM(7) GPIO(56)
+PD14 TIM4_CH3 TIM4 PWM(8) GPIO(57)
+
 
 # This is the invensense data-ready pin. We don't use it in the
 # default driver.
@@ -345,14 +363,32 @@ PE6 SPI4_MOSI SPI4
 # This is the pin to enable the sensors rail. It can be used to power
 # cycle sensors to recover them in case there are problems with power on
 # timing affecting sensor stability. We pull it high by default.
-PE3 VDD_3V3_SENSORS_EN OUTPUT HIGH
+PE0 VDD_3V3_SENSORS_EN OUTPUT HIGH
 
 # UART7 maps to SERIAL5.
 PE7 UART7_RX UART7
 PE8 UART7_TX UART7
+PE9 UART7_RTS UART7
+PE10 UART7_CTS UART7
 
 # Define a LED, mapping it to GPIO(0). LOW will illuminate the LED
 PE12 FMU_LED_AMBER OUTPUT HIGH OPENDRAIN GPIO(0)
+
+# red LED marked as B/E
+PA2 LED_RED OUTPUT OPENDRAIN GPIO(90)
+
+# green LED marked as PWR. We leave this solid on, but allow
+# for it to be controlled as a relay if needed
+PA3 LED_GREEN OUTPUT GPIO(91) LOW
+
+# blue LED marked as ACT
+PA1 LED_BLUE OUTPUT GPIO(92) HIGH
+
+# setup for BoardLED2
+define AP_NOTIFY_GPIO_LED_2_ENABLED 1
+define HAL_GPIO_A_LED_PIN 90
+define HAL_GPIO_B_LED_PIN 92
+
 
 # Power flag pins: these tell the MCU the status of the various power
 # supplies that are available. The pin names need to exactly match the
