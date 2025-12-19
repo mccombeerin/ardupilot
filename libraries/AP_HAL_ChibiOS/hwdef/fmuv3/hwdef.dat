@@ -1,7 +1,7 @@
 # hw definition file for processing by chibios_hwdef.py
 # for FMUv3 hardware (ie. for Pixhawk1, Pixhawk2 cube, XUAV2.1 etc)
 
-# This hwdef.dat file contains a lot of comments so it can act as a
+# This hwdef.dat file contains a lot of comments so it act as a
 # reference for developers adding new boards.
 
 # The hwdef.dat file defines all the hardware peripherals and pins for
@@ -306,8 +306,8 @@ PD7 BARO_CS CS
 PE4 MPU_EXT_CS CS
 
 # the first CAN bus
-PD0 CAN1_RX CAN1
-PD1 CAN1_TX CAN1
+PD1  CAN1_RX CAN1
+PD0  CAN1_TX CAN1
 
 # Another USART, this one for telem1. This one has RTS and CTS lines.
 # USART2 serial2 telem1
@@ -370,6 +370,14 @@ PE7 UART7_RX UART7
 PE8 UART7_TX UART7
 PE9 UART7_RTS UART7
 PE10 UART7_CTS UART7
+
+# microSD support
+PB15 SDMMC_D0 SDMMC1
+PB14 SDMMC_D1 SDMMC1
+PC1 SDMMC_CK SDMMC1
+PB3 SDMMC_D2 SDMMC1
+PB4 SDMMC_D3 SDMMC1
+PD7 SDMMC_CMD SDMMC1
 
 # Define a LED, mapping it to GPIO(0). LOW will illuminate the LED
 PE12 FMU_LED_AMBER OUTPUT HIGH OPENDRAIN GPIO(0)
