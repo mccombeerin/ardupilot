@@ -272,7 +272,7 @@ PC0 VBUS_nVALID INPUT PULLUP
 # that CS pins are software controlled, and are not tied to a particular
 # SPI bus.
 PC1 MAG_CS CS
-PC2 MPU_CS CS
+PE3 MPU_CS CS
 
 # This defines more ADC inputs.
 PC3 AUX_POWER ADC1 SCALE(1)
